@@ -1,0 +1,70 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "AEXML",
+        "repositoryURL": "https://github.com/tadija/AEXML.git",
+        "state": {
+          "branch": null,
+          "revision": "6eea665515d079c338690147082a8084a36484b0",
+          "version": "4.3.0"
+        }
+      },
+      {
+        "package": "CLISpinner",
+        "repositoryURL": "https://github.com/kiliankoe/CLISpinner.git",
+        "state": {
+          "branch": null,
+          "revision": "93ca0c508e2bfcfc65ef068f667b3f20c327158c",
+          "version": "0.3.6"
+        }
+      },
+      {
+        "package": "HandySwift",
+        "repositoryURL": "https://github.com/Flinesoft/HandySwift.git",
+        "state": {
+          "branch": null,
+          "revision": "44c4866a2826abaaa991c34efb076c6f09c69b4b",
+          "version": "2.6.2"
+        }
+      },
+      {
+        "package": "Rainbow",
+        "repositoryURL": "https://github.com/onevcat/Rainbow.git",
+        "state": {
+          "branch": null,
+          "revision": "797a68d0a642609424b08f11eb56974a54d5f6e2",
+          "version": "3.1.4"
+        }
+      },
+      {
+        "package": "SwiftPM",
+        "repositoryURL": "https://github.com/apple/swift-package-manager",
+        "state": {
+          "branch": null,
+          "revision": "6983434787dec4e543e9d398a0a9acf63ccd4da1",
+          "version": "0.2.1"
+        }
+      },
+      {
+        "package": "SwiftCLI",
+        "repositoryURL": "https://github.com/jakeheis/SwiftCLI",
+        "state": {
+          "branch": null,
+          "revision": "37f4a7f863f6fe76ce44fc0023f331eea0089beb",
+          "version": "5.2.0"
+        }
+      },
+      {
+        "package": "xcodeproj",
+        "repositoryURL": "https://github.com/tuist/xcodeproj.git",
+        "state": {
+          "branch": "master",
+          "revision": "6729587344efca8498841d62539d87ea299e92ed",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}
