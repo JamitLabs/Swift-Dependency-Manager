@@ -1,6 +1,6 @@
 import Foundation
 import HandySwift
 
-enum Globals {
+enum Constants {
     static var outputFormatTarget: OutputFormatTarget = .human
 }
