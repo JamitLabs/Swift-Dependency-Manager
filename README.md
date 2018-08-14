@@ -7,12 +7,12 @@
 </p>
 
 <p align="center">
-    <a href="https://app.bitrise.io/app/TODO">
-        <img src="https://app.bitrise.io/app/TODO/status.svg?token=TODO&branch=stable"
+    <a href="https://app.bitrise.io/app/d990e3762ffe3202">
+        <img src="https://app.bitrise.io/app/d990e3762ffe3202/status.svg?token=kEapR69QTIkxvSIZdh-iiA&branch=stable"
              alt="Build Status">
     </a>
     <a href="https://codebeat.co/projects/github-com-jamitlabs-swiftdependencymanager-stable">
-        <img src="https://codebeat.co/badges/TODO"
+        <img src="https://codebeat.co/badges/7e5c21d2-6b42-4371-a91b-7f1361891809"
              alt="Codebeat Badge">
     </a>
     <a href="https://github.com/JamitLabs/SwiftDependencyManager/releases">
