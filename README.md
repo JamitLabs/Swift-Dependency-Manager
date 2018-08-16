@@ -3,7 +3,7 @@
 
 <p align="center">
     <img src="https://raw.githubusercontent.com/JamitLabs/SwiftDependencyManager/stable/Logo.png"
-      width=600>
+      width=880>
 </p>
 
 <p align="center">
