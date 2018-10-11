@@ -1,4 +1,4 @@
-// swift-tools-version:4.0
+// swift-tools-version:4.2
 
 import PackageDescription
 
@@ -13,7 +13,7 @@ let package = Package(
         .package(url: "https://github.com/Flinesoft/HandySwift.git", .upToNextMajor(from: "2.6.0")),
         .package(url: "https://github.com/onevcat/Rainbow.git", .upToNextMajor(from: "3.1.4")),
         .package(url: "https://github.com/jakeheis/SwiftCLI", .upToNextMajor(from: "5.1.2")),
-        .package(url: "https://github.com/tuist/xcodeproj.git", .branch("master"))
+        .package(url: "https://github.com/tuist/xcodeproj.git", .upToNextMajor(from: "6.1.0"))
     ],
     targets: [
         .target(

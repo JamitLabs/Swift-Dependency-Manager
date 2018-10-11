@@ -49,18 +49,25 @@ private func humanPrint(_ message: String, level: PrintLevel, file: String? = ni
     switch level {
     case .verbose:
         if GlobalOptions.verbose.value {
-            print("🗣 ", message.lightCyan)
+            print(currentDateTime(), "🗣 ", message.lightCyan)
         }
 
     case .info:
-        print("ℹ️ ", message.lightBlue)
+        print(currentDateTime(), "ℹ️ ", message.lightBlue)
 
     case .warning:
-        print("⚠️ ", message.yellow)
+        print(currentDateTime(), "⚠️ ", message.yellow)
 
     case .error:
-        print("❌ ", message.red)
+        print(currentDateTime(), "❌ ", message.red)
     }
+}
+
+private func currentDateTime() -> String {
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS"
+    let dateTime = dateFormatter.string(from: Date())
+    return "\(dateTime):"
 }
 
 private func xcodePrint(_ message: String, level: PrintLevel, file: String? = nil, line: Int? = nil) {

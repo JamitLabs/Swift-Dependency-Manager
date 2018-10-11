@@ -11,6 +11,8 @@ public class InitCommand: Command {
 
     // MARK: - Instance Methods
     public func execute() throws {
-        print("Command '\(name)' is not yet implemented.", level: .info)
+        measure("Command") {
+            ManifestCreator.shared.createInitialManifest()
+        }
     }
 }
