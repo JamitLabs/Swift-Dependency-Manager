@@ -7,8 +7,8 @@
 </p>
 
 <p align="center">
-    <a href="https://app.bitrise.io/app/d990e3762ffe3202">
-        <img src="https://app.bitrise.io/app/d990e3762ffe3202/status.svg?token=kEapR69QTIkxvSIZdh-iiA&branch=stable"
+    <a href="https://app.bitrise.io/app/c5b0bc55b89a6d83">
+        <img src="https://app.bitrise.io/app/c5b0bc55b89a6d83/status.svg?token=MQ9aDbtuN3Y3yZ9T48vGqQ&branch=stable"
              alt="Build Status">
     </a>
     <a href="https://codebeat.co/projects/github-com-jamitlabs-swiftdependencymanager-stable">
@@ -19,8 +19,8 @@
         <img src="https://img.shields.io/badge/Version-0.0.0-blue.svg"
              alt="Version: 0.0.0">
     </a>
-    <img src="https://img.shields.io/badge/Swift-4.1-FFAC45.svg"
-         alt="Swift: 4.1">
+    <img src="https://img.shields.io/badge/Swift-4.2-FFAC45.svg"
+         alt="Swift: 4.2">
     <img src="https://img.shields.io/badge/Platforms-macOS-FF69B4.svg"
         alt="Platforms: macOS">
     <a href="https://github.com/JamitLabs/SwiftDependencyManager/blob/stable/LICENSE">
