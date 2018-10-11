@@ -11,9 +11,6 @@ final class ManifestCreator {
     // MARK: - Stored Type Properties
     static let shared = ManifestCreator()
 
-    // MARK: - Initializers
-    private init() {}
-
     // MARK: - Properties
     private let manifestFileName: String = "Package.swift"
     private var manifestFileUrl: URL {
@@ -34,6 +31,9 @@ final class ManifestCreator {
         )
 
         """
+
+    // MARK: - Initializers
+    private init() {}
 
     // MARK: - Instance Methods
     func createInitialManifest() {
