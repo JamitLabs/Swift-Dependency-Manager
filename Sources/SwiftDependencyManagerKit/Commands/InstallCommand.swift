@@ -11,6 +11,8 @@ public class InstallCommand: Command {
 
     // MARK: - Instance Methods
     public func execute() throws {
-        print("Command '\(name)' is not yet implemented.", level: .info)
+        try measure("Command") {
+            try SwiftPM.shared.resolveDependencies()
+        }
     }
 }

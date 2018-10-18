@@ -9,9 +9,9 @@ import Foundation
 import SwiftCLI
 
 extension Command {
-    func measure(_ task: String, _ closure: () -> Void) {
+    func measure(_ task: String, _ closure: () throws -> Void) rethrows {
         let begin = Date()
-        closure()
+        try closure()
         printTimeSummary(task: task, begin: begin)
     }
 
