@@ -1,10 +1,3 @@
-//
-//  DependencyUpdater.swift
-//  SwiftDependencyManagerKit
-//
-//  Created by Cihat Gündüz on 18.10.18.
-//
-
 import Foundation
 import SwiftCLI
 

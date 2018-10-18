@@ -1,10 +1,3 @@
-//
-//  CommandExtension.swift
-//  SwiftDependencyManagerKit
-//
-//  Created by Cihat Gündüz on 11.10.18.
-//
-
 import Foundation
 import SwiftCLI
 
