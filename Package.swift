@@ -12,9 +12,8 @@ let package = Package(
         .package(url: "https://github.com/kiliankoe/CLISpinner.git", .upToNextMinor(from: "0.3.5")),
         .package(url: "https://github.com/Flinesoft/HandySwift.git", .upToNextMajor(from: "2.6.0")),
         .package(url: "https://github.com/onevcat/Rainbow.git", .upToNextMajor(from: "3.1.4")),
-        .package(url: "https://github.com/jakeheis/SwiftCLI.git", .upToNextMajor(from: "5.1.2")),
-        .package(url: "https://github.com/JamitLabs/swift-package-manager.git", .branch("swift-4.2-branch")),
-        .package(url: "https://github.com/tuist/xcodeproj.git",  .upToNextMajor(from: "6.1.0"))
+        .package(url: "https://github.com/jakeheis/SwiftCLI", .upToNextMajor(from: "5.1.2")),
+        .package(url: "https://github.com/tuist/xcodeproj.git", .upToNextMajor(from: "6.1.0"))
     ],
     targets: [
         .target(
@@ -28,7 +27,6 @@ let package = Package(
                 "HandySwift",
                 "Rainbow",
                 "SwiftCLI",
-                "SwiftPM",
                 "xcodeproj"
             ]
         ),
