@@ -6,7 +6,10 @@ let package = Package(
     name: "SwiftDependencyManager",
     products: [
         .executable(name: "sdm", targets: ["SwiftDependencyManager"]),
-        .library(name: "SwiftDependencyManagerKit", targets: ["SwiftDependencyManagerKit"])
+        .library(name: "SwiftDependencyManagerKit", type: .dynamic, targets: ["SwiftDependencyManagerKit"]),
+        .library(name: "CartfileToPackageManifest", type: .dynamic, targets: ["CartfileToPackageManifest"]),
+        .library(name: "PodspecToPackageManifest", type: .dynamic, targets: ["PodspecToPackageManifest"]),
+        .library(name: "PackageManifest", type: .dynamic, targets: ["PackageManifest"])
     ],
     dependencies: [
         .package(url: "https://github.com/kiliankoe/CLISpinner.git", .upToNextMinor(from: "0.3.5")),
@@ -23,8 +26,10 @@ let package = Package(
         .target(
             name: "SwiftDependencyManagerKit",
             dependencies: [
+                "CartfileToPackageManifest",
                 "CLISpinner",
                 "HandySwift",
+                "PodspecToPackageManifest",
                 "Rainbow",
                 "SwiftCLI",
                 "xcodeproj"
@@ -33,6 +38,30 @@ let package = Package(
         .testTarget(
             name: "SwiftDependencyManagerKitTests",
             dependencies: ["SwiftDependencyManagerKit", "HandySwift"]
+        ),
+        .target(
+            name: "CartfileToPackageManifest",
+            dependencies: ["HandySwift", "PackageManifest"]
+        ),
+        .testTarget(
+            name: "CartfileToPackageManifestTests",
+            dependencies: ["HandySwift"]
+        ),
+        .target(
+            name: "PodspecToPackageManifest",
+            dependencies: ["HandySwift", "PackageManifest"]
+        ),
+        .testTarget(
+            name: "PodspecToPackageManifestTests",
+            dependencies: ["HandySwift"]
+        ),
+        .target(
+            name: "PackageManifest",
+            dependencies: ["HandySwift"]
+        ),
+        .testTarget(
+            name: "PackageManifestTests",
+            dependencies: ["HandySwift"]
         )
     ]
 )
