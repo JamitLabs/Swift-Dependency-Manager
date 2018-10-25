@@ -8,7 +8,7 @@ public struct PackageManifest {
         try contents().write(toFile: path, atomically: true, encoding: .utf8)
     }
 
-    private func contents() -> String {
+    func contents() -> String {
         return """
             // swift-tools-version:4.2
             import PackageDescription
@@ -19,23 +19,14 @@ public struct PackageManifest {
                     .library(name: "\(name)", type: .dynamic, targets: ["\(name)"])
                 ],
                 dependencies: [
-                //        .package(url: "https://github.com/Flinesoft/HandySwift.git", .upToNextMajor(from: "2.5.0")),
-                //        .package(url: "https://github.com/Flinesoft/HandyUIKit.git", .upToNextMajor(from: "1.6.0"))
+                    \(dependencies.map { $0.packageManifestEntry() }.joined(separator: "\n        "))
                 ],
                 targets: [
                     .target(
-                        name: "NewFrameworkTemplate",
+                        name: "\(name)",
                         dependencies: [
-                //                "HandySwift",
-                //                "HandyUIKit"
-                        ],
-                        path: "Frameworks/NewFrameworkTemplate",
-                        exclude: ["Frameworks/SupportingFiles"]
-                    ),
-                    .testTarget(
-                        name: "NewFrameworkTemplateTests",
-                        dependencies: ["NewFrameworkTemplate"],
-                        exclude: ["Tests/SupportingFiles"]
+                            \(dependencies.map { "\"\($0.name),\"" }.joined(separator: "\n            "))
+                        ]
                     )
                 ]
             )
