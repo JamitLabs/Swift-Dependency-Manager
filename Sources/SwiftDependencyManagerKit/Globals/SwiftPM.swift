@@ -2,11 +2,10 @@ import Basic
 import Foundation
 import PackageLoading
 import PackageModel
-import SwiftCLI
 import Utility
 
 struct ManifestResource: ManifestResourceProvider {
-    let swiftCompiler = AbsolutePath(try! capture(bash: "which swiftc").stdout)
+    let swiftCompiler = AbsolutePath("/Users/Arbeit/.swiftenv/shims/swiftc")
     let libDir = AbsolutePath("/usr/local/lib/")
 }
 
