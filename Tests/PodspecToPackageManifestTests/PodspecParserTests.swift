@@ -1,4 +1,6 @@
 @testable import PodspecToPackageManifest
+import PackageManifest
+import TestSupport
 import XCTest
 
 final class PodspecParserTests: XCTestCase {

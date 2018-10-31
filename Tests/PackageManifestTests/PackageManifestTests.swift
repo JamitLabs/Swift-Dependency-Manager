@@ -21,8 +21,8 @@ final class PackageManifestTests: XCTestCase {
                     .library(name: "MyPackage", type: .dynamic, targets: ["MyPackage"])
                 ],
                 dependencies: [
-                    .package(url: "https://github.com/Flinesoft/HandySwift.git", .upToNextMajor(from: "2.6"),
-                    .package(url: "https://github.com/Flinesoft/HandyUIKit.git", .branch("stable"),
+                    .package(url: "https://github.com/Flinesoft/HandySwift.git", .upToNextMajor(from: "2.6")),
+                    .package(url: "https://github.com/Flinesoft/HandyUIKit.git", .branch("stable")),
                 ],
                 targets: [
                     .target(

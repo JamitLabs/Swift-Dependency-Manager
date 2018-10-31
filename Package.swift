@@ -9,7 +9,8 @@ let package = Package(
         .library(name: "SwiftDependencyManagerKit", type: .dynamic, targets: ["SwiftDependencyManagerKit"]),
         .library(name: "CartfileToPackageManifest", type: .dynamic, targets: ["CartfileToPackageManifest"]),
         .library(name: "PodspecToPackageManifest", type: .dynamic, targets: ["PodspecToPackageManifest"]),
-        .library(name: "PackageManifest", type: .dynamic, targets: ["PackageManifest"])
+        .library(name: "PackageManifest", type: .dynamic, targets: ["PackageManifest"]),
+        .library(name: "TestSupport", type: .dynamic, targets: ["TestSupport"])
     ],
     dependencies: [
         .package(url: "https://github.com/kiliankoe/CLISpinner.git", .upToNextMinor(from: "0.3.5")),
@@ -37,7 +38,7 @@ let package = Package(
         ),
         .testTarget(
             name: "SwiftDependencyManagerKitTests",
-            dependencies: ["SwiftDependencyManagerKit", "HandySwift"]
+            dependencies: ["SwiftDependencyManagerKit", "HandySwift", "TestSupport"]
         ),
         .target(
             name: "CartfileToPackageManifest",
@@ -45,7 +46,7 @@ let package = Package(
         ),
         .testTarget(
             name: "CartfileToPackageManifestTests",
-            dependencies: ["HandySwift", "PackageManifest"]
+            dependencies: ["HandySwift", "PackageManifest", "TestSupport"]
         ),
         .target(
             name: "PodspecToPackageManifest",
@@ -53,7 +54,7 @@ let package = Package(
         ),
         .testTarget(
             name: "PodspecToPackageManifestTests",
-            dependencies: ["HandySwift", "PackageManifest"]
+            dependencies: ["HandySwift", "PackageManifest", "TestSupport"]
         ),
         .target(
             name: "PackageManifest",
@@ -61,6 +62,10 @@ let package = Package(
         ),
         .testTarget(
             name: "PackageManifestTests",
+            dependencies: ["HandySwift"]
+        ),
+        .target(
+            name: "TestSupport",
             dependencies: ["HandySwift"]
         )
     ]

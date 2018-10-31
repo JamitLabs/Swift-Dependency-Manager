@@ -13,7 +13,7 @@ public struct Dependency: Equatable {
 
     func packageManifestEntry() -> String {
         return """
-            .package(url: "\(gitPath)", \(version.packageManifestSpecifier()),
+            .package(url: "\(gitPath)", \(version.packageManifestSpecifier())),
             """
     }
 }

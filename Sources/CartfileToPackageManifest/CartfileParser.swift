@@ -6,16 +6,16 @@ enum CartfileParserError: Error {
     case unexpectedVersionSpecifier
 }
 
-public class CartfileParser {
+class CartfileParser {
     private typealias GitHubEntry = (user: String, repository: String, version: String)
 
     private let contents: String
 
-    public init(contents: String) {
+    init(contents: String) {
         self.contents = contents
     }
 
-    public func packageManifest(packageName: String) -> PackageManifest {
+    func packageManifest(packageName: String) -> PackageManifest {
         let gitHubRegex = try! Regex("github \"([^/\"]+)/([^/\"]+)\" *([^\\n]*)")
 
         let gitHubEntries: [GitHubEntry] = gitHubRegex.matches(in: contents).map { match in
