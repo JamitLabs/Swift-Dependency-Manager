@@ -1,6 +1,8 @@
 import Foundation
 import XCTest
 
+// swiftlint:disable force_try
+
 extension XCTestCase {
     public func resourcesLoaded(_ resources: [Resource], testCode: () -> Void) {
         try! FileManager.default.removeContentsOfDirectory(at: Resource.baseUrl)

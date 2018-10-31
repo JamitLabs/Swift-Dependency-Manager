@@ -2,6 +2,8 @@ import Foundation
 import HandySwift
 import PackageManifest
 
+// swiftlint:disable force_try
+
 enum CartfileParserError: Error {
     case unexpectedVersionSpecifier
 }
@@ -36,22 +38,16 @@ class CartfileParser {
     private func versionSpecifier(for version: String) throws -> VersionSpecifier {
         if version.isBlank {
             return .latest
-
         } else if let match = (try! Regex("~> *(\\S+)")).firstMatch(in: version) {
             return VersionSpecifier.compatibleWith(match.captures[0]!)
-
         } else if let match = (try! Regex("\"([0-9a-f]{40})\"")).firstMatch(in: version) {
             return VersionSpecifier.revision(match.captures[0]!)
-
         } else if let match = (try! Regex("\"(\\S+)\"")).firstMatch(in: version) {
             return VersionSpecifier.branch(match.captures[0]!)
-
         } else if let match = (try! Regex("== (\\S+)")).firstMatch(in: version) {
             return VersionSpecifier.exact(match.captures[0]!)
-
         } else if let match = (try! Regex(">= (\\S+)")).firstMatch(in: version) {
             return VersionSpecifier.minimum(match.captures[0]!)
-
         } else {
             throw CartfileParserError.unexpectedVersionSpecifier
         }

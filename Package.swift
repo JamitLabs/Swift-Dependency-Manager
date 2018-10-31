@@ -8,7 +8,6 @@ let package = Package(
         .executable(name: "sdm", targets: ["SwiftDependencyManager"]),
         .library(name: "SwiftDependencyManagerKit", type: .dynamic, targets: ["SwiftDependencyManagerKit"]),
         .library(name: "CartfileToPackageManifest", type: .dynamic, targets: ["CartfileToPackageManifest"]),
-        .library(name: "PodspecToPackageManifest", type: .dynamic, targets: ["PodspecToPackageManifest"]),
         .library(name: "PackageManifest", type: .dynamic, targets: ["PackageManifest"]),
         .library(name: "TestSupport", type: .dynamic, targets: ["TestSupport"])
     ],
@@ -30,7 +29,6 @@ let package = Package(
                 "CartfileToPackageManifest",
                 "CLISpinner",
                 "HandySwift",
-                "PodspecToPackageManifest",
                 "Rainbow",
                 "SwiftCLI",
                 "xcodeproj"
@@ -46,14 +44,6 @@ let package = Package(
         ),
         .testTarget(
             name: "CartfileToPackageManifestTests",
-            dependencies: ["HandySwift", "PackageManifest", "TestSupport"]
-        ),
-        .target(
-            name: "PodspecToPackageManifest",
-            dependencies: ["HandySwift", "PackageManifest"]
-        ),
-        .testTarget(
-            name: "PodspecToPackageManifestTests",
             dependencies: ["HandySwift", "PackageManifest", "TestSupport"]
         ),
         .target(

@@ -27,7 +27,7 @@ final class CartfileToPackageManifestTests: XCTestCase {
 
     func testConvert() {
         resourcesLoaded([cartfile]) {
-            CartfileToPackageManifest.shared.convert(in: Resource.baseUrl.path, packageName: "MyPackage")
+            try? CartfileToPackageManifest.shared.convert(in: Resource.baseUrl.path, packageName: "MyPackage")
 
             let expectedManifestUrl = URL(fileURLWithPath: Resource.baseUrl.path).appendingPathComponent("Package.swift")
             let manifestContents = try? String(contentsOf: expectedManifestUrl)

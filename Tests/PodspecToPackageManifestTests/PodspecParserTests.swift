@@ -1,5 +1,5 @@
-@testable import PodspecToPackageManifest
 import PackageManifest
+@testable import PodspecToPackageManifest
 import TestSupport
 import XCTest
 

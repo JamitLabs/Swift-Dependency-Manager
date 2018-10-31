@@ -9,7 +9,7 @@ public enum VersionSpecifier: Equatable {
     case revision(String)
 
     func packageManifestSpecifier() -> String {
-        switch self {
+        switch self { // swiftlint:disable too_much_unindentation
         case .latest:
             return """
                 from: "0.0.0"
@@ -45,7 +45,6 @@ public enum VersionSpecifier: Equatable {
             return """
                 .revision("\(version)")
                 """
-        }
-
+        } // swiftlint:enable too_much_unindentation
     }
 }
