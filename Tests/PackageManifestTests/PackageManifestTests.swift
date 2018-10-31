@@ -36,7 +36,6 @@ final class PackageManifestTests: XCTestCase {
             )
 
             """
-        print(result)
 
         XCTAssertEqual(result, expected)
     }

@@ -45,7 +45,7 @@ let package = Package(
         ),
         .testTarget(
             name: "CartfileToPackageManifestTests",
-            dependencies: ["HandySwift"]
+            dependencies: ["HandySwift", "PackageManifest"]
         ),
         .target(
             name: "PodspecToPackageManifest",
@@ -53,7 +53,7 @@ let package = Package(
         ),
         .testTarget(
             name: "PodspecToPackageManifestTests",
-            dependencies: ["HandySwift"]
+            dependencies: ["HandySwift", "PackageManifest"]
         ),
         .target(
             name: "PackageManifest",

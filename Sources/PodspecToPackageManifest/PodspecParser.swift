@@ -8,7 +8,7 @@ public class PodspecParser {
         self.contents = contents
     }
 
-    public func packageManifest() -> PackageManifest {
+    public func packageManifest(packageName: String) -> PackageManifest {
         // TODO: not yet implemented
         fatalError()
     }

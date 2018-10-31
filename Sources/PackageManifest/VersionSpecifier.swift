@@ -1,6 +1,7 @@
 import Foundation
 
-public enum VersionSpecifier {
+public enum VersionSpecifier: Equatable {
+    case latest
     case exact(String)
     case minimum(String)
     case compatibleWith(String)
@@ -9,6 +10,11 @@ public enum VersionSpecifier {
 
     func packageManifestSpecifier() -> String {
         switch self {
+        case .latest:
+            return """
+                from: "0.0.0"
+                """
+
         case let .exact(version):
             return """
                 .exact("\(version)")

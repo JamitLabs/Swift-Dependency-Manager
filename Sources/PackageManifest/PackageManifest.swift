@@ -4,6 +4,11 @@ public struct PackageManifest {
     public let name: String
     public let dependencies: [Dependency]
 
+    public init(name: String, dependencies: [Dependency]) {
+        self.name = name
+        self.dependencies = dependencies
+    }
+
     public func write(to path: String) throws {
         try contents().write(toFile: path, atomically: true, encoding: .utf8)
     }
