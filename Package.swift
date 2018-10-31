@@ -52,7 +52,7 @@ let package = Package(
         ),
         .testTarget(
             name: "PackageManifestTests",
-            dependencies: ["HandySwift"]
+            dependencies: ["HandySwift", "PackageManifest"]
         ),
         .target(
             name: "TestSupport",
