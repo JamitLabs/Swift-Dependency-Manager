@@ -6,17 +6,14 @@ let package = Package(
     name: "SwiftDependencyManager",
     products: [
         .executable(name: "sdm", targets: ["SwiftDependencyManager"]),
-        .library(name: "SwiftDependencyManagerKit", type: .dynamic, targets: ["SwiftDependencyManagerKit"]),
-        .library(name: "CartfileToPackageManifest", type: .dynamic, targets: ["CartfileToPackageManifest"]),
-        .library(name: "PackageManifest", type: .dynamic, targets: ["PackageManifest"]),
-        .library(name: "TestSupport", type: .dynamic, targets: ["TestSupport"])
+        .library(name: "SwiftDependencyManagerKit", type: .dynamic, targets: ["SwiftDependencyManagerKit"])
     ],
     dependencies: [
         .package(url: "https://github.com/kiliankoe/CLISpinner.git", .upToNextMinor(from: "0.3.5")),
         .package(url: "https://github.com/Flinesoft/HandySwift.git", .upToNextMajor(from: "2.6.0")),
+        .package(url: "https://github.com/mxcl/PromiseKit.git", .upToNextMajor(from: "6.5.2")),
         .package(url: "https://github.com/onevcat/Rainbow.git", .upToNextMajor(from: "3.1.4")),
-        .package(url: "https://github.com/jakeheis/SwiftCLI", .upToNextMajor(from: "5.1.2")),
-        .package(url: "https://github.com/tuist/xcodeproj.git", .upToNextMajor(from: "6.1.0"))
+        .package(url: "https://github.com/jakeheis/SwiftCLI", .upToNextMajor(from: "5.1.2"))
     ],
     targets: [
         .target(
@@ -26,37 +23,16 @@ let package = Package(
         .target(
             name: "SwiftDependencyManagerKit",
             dependencies: [
-                "CartfileToPackageManifest",
                 "CLISpinner",
                 "HandySwift",
+                "PromiseKit",
                 "Rainbow",
-                "SwiftCLI",
-                "xcodeproj"
+                "SwiftCLI"
             ]
         ),
         .testTarget(
             name: "SwiftDependencyManagerKitTests",
-            dependencies: ["SwiftDependencyManagerKit", "HandySwift", "TestSupport"]
-        ),
-        .target(
-            name: "CartfileToPackageManifest",
-            dependencies: ["HandySwift", "PackageManifest"]
-        ),
-        .testTarget(
-            name: "CartfileToPackageManifestTests",
-            dependencies: ["HandySwift", "PackageManifest", "TestSupport"]
-        ),
-        .target(
-            name: "PackageManifest",
-            dependencies: ["HandySwift"]
-        ),
-        .testTarget(
-            name: "PackageManifestTests",
-            dependencies: ["HandySwift", "PackageManifest"]
-        ),
-        .target(
-            name: "TestSupport",
-            dependencies: ["HandySwift"]
+            dependencies: ["SwiftDependencyManagerKit", "HandySwift"]
         )
     ]
 )

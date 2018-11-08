@@ -119,7 +119,7 @@ func performWithSpinner(
     level: PrintLevel = .info,
     pattern: CLISpinner.Pattern = .dots,
     _ body: @escaping (@escaping (() -> Void) -> Void) -> Void
-    ) {
+) {
     let spinner = Spinner(pattern: pattern, text: message, color: level.color)
     spinner.start()
     spinner.unhideCursor()

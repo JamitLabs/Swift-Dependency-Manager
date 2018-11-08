@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Dependency: Equatable {
+struct Dependency: Equatable, Codable {
     public let name: String
     public let gitPath: String
     public let version: VersionSpecifier
