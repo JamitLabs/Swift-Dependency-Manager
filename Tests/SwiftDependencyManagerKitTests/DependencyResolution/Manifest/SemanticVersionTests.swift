@@ -68,4 +68,11 @@ class SemanticVersionTests: XCTestCase {
         XCTAssertEqual(SemanticVersion(string: "v2.7.3")!.description, "2.7.3")
         XCTAssertEqual(SemanticVersion(string: "05.017.0049")!.description, "5.17.49")
     }
+
+    func testComparable() {
+        let expected = ["1.0.0-alpha", "1.0.0-alpha.1", "1.0.0-alpha.beta", "1.0.0-beta", "1.0.0-beta.2", "1.0.0-beta.11", "1.0.0-rc.1", "1.0.0"]
+        let result = expected.reversed().map { SemanticVersion(string: $0)! }.sorted()
+
+        XCTAssertEqual(result.map { $0.description }, expected)
+    }
 }
