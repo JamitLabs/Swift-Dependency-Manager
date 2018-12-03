@@ -3,9 +3,9 @@ import HandySwift
 
 enum VersionSpecifier: RawRepresentable, Codable, Equatable {
     case any
-    case commit(String)
-    case branch(String)
-    case exactVersion(SemanticVersion)
+    case commit(String) // TODO: clearly document that framework releases should never include a commit based dependency version specifier
+    case branch(String) // TODO: clearly document that framework releases should never include a branch based dependency version specifier
+    case exactVersion(SemanticVersion) // TODO: document that .upToNextMajor should be used instead of this whenever possible
     case minimumVersion(SemanticVersion)
     case upToNextMajor(SemanticVersion)
 
