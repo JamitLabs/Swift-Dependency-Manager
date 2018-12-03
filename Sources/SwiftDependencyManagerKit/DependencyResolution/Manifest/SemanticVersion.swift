@@ -1,27 +1,16 @@
 import Foundation
 import HandySwift
 
-struct SemanticVersion {
+struct SemanticVersion: RawRepresentable, Codable {
+    typealias RawValue = String
+
     let major: Int
     let minor: Int
     let patch: Int
     let preReleaseIdentifiers: [String]?
     let metadata: String?
 
-    init?(string: String) {
-        let regex = try! Regex("\\Av?(\\d+)\\.(\\d+)(?:\\.(\\d+))?(?:-([0-9A-Za-z-\\.]+))?(?:\\+(\\S+))?\\z")
-        guard let captures = regex.firstMatch(in: string)?.captures else { return nil }
-
-        self.major = Int(captures[0]!)!
-        self.minor = Int(captures[1]!)!
-        self.patch = captures[2] != nil ? Int(captures[2]!)! : 0
-        self.preReleaseIdentifiers = captures[3]?.components(separatedBy: ".")
-        self.metadata = captures[4]
-    }
-}
-
-extension SemanticVersion: CustomStringConvertible {
-    var description: String {
+    var rawValue: String {
         var description = "\(major).\(minor).\(patch)"
 
         if let preReleaseIdentifiers = preReleaseIdentifiers {
@@ -33,6 +22,23 @@ extension SemanticVersion: CustomStringConvertible {
         }
 
         return description
+    }
+
+    init?(rawValue: String) {
+        let regex = try! Regex("\\Av?(\\d+)\\.(\\d+)(?:\\.(\\d+))?(?:-([0-9A-Za-z-\\.]+))?(?:\\+(\\S+))?\\z")
+        guard let captures = regex.firstMatch(in: rawValue)?.captures else { return nil }
+
+        self.major = Int(captures[0]!)!
+        self.minor = Int(captures[1]!)!
+        self.patch = captures[2] != nil ? Int(captures[2]!)! : 0
+        self.preReleaseIdentifiers = captures[3]?.components(separatedBy: ".")
+        self.metadata = captures[4]
+    }
+}
+
+extension SemanticVersion: CustomStringConvertible {
+    var description: String {
+        return rawValue
     }
 }
 

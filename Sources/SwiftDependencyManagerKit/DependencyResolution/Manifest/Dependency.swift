@@ -10,10 +10,4 @@ struct Dependency: Equatable, Codable {
         self.gitPath = gitPath
         self.version = version
     }
-
-    func packageManifestEntry() -> String {
-        return """
-            .package(url: "\(gitPath)", \(version.packageManifestSpecifier())),
-            """
-    }
 }

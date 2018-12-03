@@ -1,60 +1,125 @@
 import Foundation
+import HandySwift
 
-enum VersionSpecifier: String, RawRepresentable, Codable {
-    init?(rawValue: String) {
-        return nil
-    }
+enum VersionSpecifier: RawRepresentable, Codable, Equatable {
+    case any
+    case commit(String)
+    case branch(String)
+    case exactVersion(SemanticVersion)
+    case minimumVersion(SemanticVersion)
+    case upToNextMajor(SemanticVersion)
+
+    typealias RawValue = String
 
     var rawValue: String {
-        return "" // TODO: not yet implemented
+        switch self {
+        case .any:
+            return "any"
+
+        case let .commit(hash):
+            return "commit:\(hash)"
+
+        case let .branch(branchName):
+            return "branch:\(branchName)"
+
+        case let .exactVersion(version):
+            return "exactVersion:\(version.rawValue)"
+
+        case let .minimumVersion(version):
+            return "minimumVersion:\(version.rawValue)"
+
+        case let .upToNextMajor(version):
+            return "upToNextMajor:\(version.rawValue)"
+        }
     }
 
-    case latest
-//    case exact(String)
-//    case minimum(String)
-//    case compatibleWith(String)
-//    case branch(String)
-//    case revision(String)
+    init?(carthageSpecifier: String) {
+        return nil // TODO: not yet implemented
+    }
 
-    func packageManifestSpecifier() -> String {
-        return "" // TODO: not yet implemented
+    init?(rawValue: VersionSpecifier.RawValue) {
+        let getRawValueString: () -> String = { rawValue.components(separatedBy: ":")[1] }
+        let getRawValueVersion: () -> SemanticVersion? = { SemanticVersion(rawValue: getRawValueString()) }
 
-//        switch self { // swiftlint:disable too_much_unindentation
-//        case .latest:
-//            return """
-//                from: "0.0.0"
-//                """
-//
-//        case let .exact(version):
-//            return """
-//                .exact("\(version)")
-//                """
-//
-//        case let .minimum(version):
-//            return """
-//                from: "\(version)"
-//                """
-//
-//        case let .compatibleWith(version):
-//            if version.split(separator: ".").count > 2 {
-//                return """
-//                    .upToNextMinor(from: "\(version)")
-//                    """
-//            } else {
-//                return """
-//                    .upToNextMajor(from: "\(version)")
-//                    """
-//            }
-//
-//        case let .branch(version):
-//            return """
-//                .branch("\(version)")
-//                """
-//
-//        case let .revision(version):
-//            return """
-//                .revision("\(version)")
-//                """
-//        } // swiftlint:enable too_much_unindentation
+        switch rawValue {
+        case "any":
+            self = .any
+
+        case _ where rawValue.hasPrefix("commit:"):
+            self = .commit(getRawValueString())
+
+        case _ where rawValue.hasPrefix("branch:"):
+            self = .branch(getRawValueString())
+
+        case _ where rawValue.hasPrefix("exactVersion:"):
+            guard let version = getRawValueVersion() else { return nil }
+            self = .exactVersion(version)
+
+        case _ where rawValue.hasPrefix("minimumVersion:"):
+            guard let version = getRawValueVersion() else { return nil }
+            self = .minimumVersion(version)
+
+        case _ where rawValue.hasPrefix("upToNextMajor:"):
+            guard let version = getRawValueVersion() else { return nil }
+            self = .minimumVersion(version)
+
+        default:
+            return nil
+        }
+    }
+}
+
+extension Collection where Element == VersionSpecifier {
+    var commonVersionSpecifier: VersionSpecifier? {
+        guard var temporaryResult: VersionSpecifier = first else { return nil }
+
+        for semanticVersion in self {
+            guard let commonVersionSpecifier = commonVersionSpecifier(lhs: temporaryResult, rhs: semanticVersion) else { return nil }
+            temporaryResult = commonVersionSpecifier
+        }
+
+        return temporaryResult
+    }
+
+    private func commonVersionSpecifier(lhs: VersionSpecifier, rhs: VersionSpecifier) -> VersionSpecifier? {
+        guard lhs != rhs else { return lhs }
+
+        switch (lhs, rhs) {
+        case let (.any, moreSpecificVersionSpecifier), let (moreSpecificVersionSpecifier, .any):
+            return moreSpecificVersionSpecifier
+
+        case let (.minimumVersion(minimumVersion), .exactVersion(exactVersion)), let (.exactVersion(exactVersion), .minimumVersion(minimumVersion)):
+            guard exactVersion >= minimumVersion else { return nil }
+            return .exactVersion(exactVersion)
+
+        case let (.upToNextMajor(upToNextMajorVersion), .exactVersion(exactVersion)), let (.exactVersion(exactVersion), .upToNextMajor(upToNextMajorVersion)):
+            guard exactVersion >= upToNextMajorVersion && exactVersion.major == upToNextMajorVersion.major else { return nil }
+            return .exactVersion(exactVersion)
+
+        case let (.upToNextMajor(upToNextMajorVersion), .minimumVersion(minimumVersion)), let (.minimumVersion(minimumVersion), .upToNextMajor(upToNextMajorVersion)):
+            guard minimumVersion.major <= upToNextMajorVersion.major else { return nil }
+
+            if minimumVersion < upToNextMajorVersion {
+                return .upToNextMajor(upToNextMajorVersion)
+            } else {
+                return .upToNextMajor(minimumVersion)
+            }
+
+        case let (.minimumVersion(lhsMinimumVersion), .minimumVersion(rhsMinimumVersion)):
+            return .minimumVersion([lhsMinimumVersion, rhsMinimumVersion].max()!)
+
+        case let (.upToNextMajor(lhsUpToNextMajorVersion), .upToNextMajor(rhsUpToNextMajorVersion)):
+            guard lhsUpToNextMajorVersion.major == rhsUpToNextMajorVersion.major else { return nil }
+            return .upToNextMajor([lhsUpToNextMajorVersion, rhsUpToNextMajorVersion].max()!)
+
+        default:
+            return nil
+        }
+    }
+}
+
+extension SemanticVersion: ExpressibleByStringLiteral {
+    init(stringLiteral value: String) {
+        self = SemanticVersion(rawValue: value)!
     }
 }

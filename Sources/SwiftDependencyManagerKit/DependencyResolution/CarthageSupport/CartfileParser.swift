@@ -31,11 +31,12 @@ class CartfileParser {
             )
         }
 
-        return Manifest(name: packageName, dependencies: dependencies)
+        let product = Product(name: packageName, paths: nil)
+        return Manifest(products: [product], dependencies: dependencies)
     }
 
     private func versionSpecifier(for version: String) throws -> VersionSpecifier {
-        return VersionSpecifier.latest // TODO: not yet implemented
+        return VersionSpecifier.any // TODO: not yet implemented
 
 //        if version.isBlank {
 //            return .latest
