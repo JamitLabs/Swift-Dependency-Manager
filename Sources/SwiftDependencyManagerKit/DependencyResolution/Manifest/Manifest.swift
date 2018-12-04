@@ -69,4 +69,33 @@ struct Manifest {
 
         return Manifest(products: products, dependencies: dependencies)
     }
+
+    func fileContents() -> String {
+        let productsContents: [String] = products.map { product in
+            var lines: [String] = ["[[products]]"]
+            lines.append("name = \"\(product.name)\"")
+
+            if let productPaths = product.paths {
+                lines.append("paths = \(productPaths)")
+            }
+
+            if let productDependencies = product.dependencies {
+                lines.append("dependencies = \(productDependencies)")
+            }
+
+            return lines.joined(separator: "\n")
+        }
+
+        let dependenciesContents: [String] = dependencies.map { dependency in
+            var lines: [String] = ["[[dependencies]]"]
+
+            lines.append("name = \"\(dependency.name)\"")
+            lines.append("gitPath = \"\(dependency.gitPath)\"")
+            lines.append("version = \"\(dependency.version.rawValue)\"")
+
+            return lines.joined(separator: "\n")
+        }
+
+        return (productsContents + dependenciesContents).joined(separator: "\n\n")
+    }
 }

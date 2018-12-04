@@ -105,4 +105,66 @@ class ManifestTests: XCTestCase {
         XCTAssertEqual(manifest.dependencies[1].gitPath, "https://github.com/Flinesoft/HandyUIKit.git")
         XCTAssertEqual(manifest.dependencies[1].version, .exactVersion("1.9.1"))
     }
+
+    func testFileContentsAppManifest() {
+        let manifestContents: String = """
+            [[dependencies]]
+            name = "HandySwift"
+            gitPath = "https://github.com/Flinesoft/HandySwift.git"
+            version = "any"
+
+            [[dependencies]]
+            name = "HandyUIKit"
+            gitPath = "https://github.com/Flinesoft/HandyUIKit.git"
+            version = "upToNextMajor:1.8.0"
+            """
+        let manifest = try! Manifest.make(fileContents: manifestContents)
+        XCTAssertEqual(manifest.fileContents(), manifestContents)
+    }
+
+    func testFileContentsSimpleFrameworkManifest() {
+        let manifestContents: String = """
+            [[products]]
+            name = "CSVImporter"
+
+            [[dependencies]]
+            name = "HandySwift"
+            gitPath = "https://github.com/Flinesoft/HandySwift.git"
+            version = "commit:0000000000000000000000000000000000000000"
+
+            [[dependencies]]
+            name = "HandyUIKit"
+            gitPath = "https://github.com/Flinesoft/HandyUIKit.git"
+            version = "minimumVersion:1.4.4"
+            """
+        let manifest = try! Manifest.make(fileContents: manifestContents)
+        XCTAssertEqual(manifest.fileContents(), manifestContents)
+    }
+
+
+    func testFileContentsKitFrameworkManifest() {
+        let manifestContents: String = """
+            [[products]]
+            name = "CSVImporter"
+            paths = ["Sources/CSVImporter"]
+            dependencies = ["CSVImporterKit"]
+
+            [[products]]
+            name = "CSVImporterKit"
+            paths = ["Sources/CSVImporterKit"]
+            dependencies = ["HandySwift", "HandyUIKit"]
+
+            [[dependencies]]
+            name = "HandySwift"
+            gitPath = "https://github.com/Flinesoft/HandySwift.git"
+            version = "branch:master"
+
+            [[dependencies]]
+            name = "HandyUIKit"
+            gitPath = "https://github.com/Flinesoft/HandyUIKit.git"
+            version = "exactVersion:1.9.1"
+            """
+        let manifest = try! Manifest.make(fileContents: manifestContents)
+        XCTAssertEqual(manifest.fileContents(), manifestContents)
+    }
 }
