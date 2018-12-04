@@ -61,7 +61,7 @@ enum VersionSpecifier: RawRepresentable, Codable, Equatable {
 
         case _ where rawValue.hasPrefix("upToNextMajor:"):
             guard let version = getRawValueVersion() else { return nil }
-            self = .minimumVersion(version)
+            self = .upToNextMajor(version)
 
         default:
             return nil

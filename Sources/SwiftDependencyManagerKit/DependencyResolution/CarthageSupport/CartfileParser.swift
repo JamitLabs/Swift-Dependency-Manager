@@ -16,7 +16,7 @@ class CartfileParser {
         self.contents = contents
     }
 
-    func packageManifest(packageName: String) -> Manifest {
+    func manifest(packageName: String) -> Manifest {
         let gitHubRegex = try! Regex("github \"([^/\"]+)/([^/\"]+)\" *([^\\n]*)")
 
         let gitHubEntries: [GitHubEntry] = gitHubRegex.matches(in: contents).map { match in
@@ -31,7 +31,7 @@ class CartfileParser {
             )
         }
 
-        let product = Product(name: packageName, paths: nil)
+        let product = Product(name: packageName, paths: nil, dependencies: nil)
         return Manifest(products: [product], dependencies: dependencies)
     }
 
