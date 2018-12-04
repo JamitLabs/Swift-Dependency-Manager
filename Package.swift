@@ -26,6 +26,7 @@ let package = Package(
             name: "SwiftDependencyManagerKit",
             dependencies: [
                 "CLISpinner",
+                "Clibgit2",
                 "HandySwift",
                 "MungoHealer",
                 "PromiseKit",
@@ -37,6 +38,7 @@ let package = Package(
         .testTarget(
             name: "SwiftDependencyManagerKitTests",
             dependencies: ["SwiftDependencyManagerKit", "HandySwift"]
-        )
+        ),
+        .target(name: "Clibgit2", dependencies: [])
     ]
 )
