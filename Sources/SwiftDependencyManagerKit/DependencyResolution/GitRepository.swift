@@ -1,4 +1,5 @@
 import Foundation
+import HandySwift
 import MungoHealer
 import PromiseKit
 import Clibgit2
@@ -47,9 +48,12 @@ struct GitRepository {
         }
     }
 
-    private func fetchTags() -> [String] {
+    func fetchTags() -> [String] {
         let repoManager = RepositoryManager()
-        let repo = try! Repository(openAt: URL(string: path)!, manager: repoManager)
+        let remoteUrl = URL(string: path)!
+        let randomDirName = String(randomWithLength: 8, allowedCharactersType: .alphaNumeric)
+        let tempDir = FileManager.default.temporaryDirectory.appendingPathComponent(randomDirName)
+        let repo = try! Repository(cloneFrom: remoteUrl, at: tempDir, manager: repoManager)
         let tags = Tags(repository: repo)
         return tags.names()
     }
