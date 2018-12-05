@@ -2,6 +2,15 @@
   "object": {
     "pins": [
       {
+        "package": "Clibgit2",
+        "repositoryURL": "https://github.com/fmccann/Clibgit2.git",
+        "state": {
+          "branch": "master",
+          "revision": "57ac1e181fff70d7716805c8713113fc37c173f2",
+          "version": null
+        }
+      },
+      {
         "package": "CLISpinner",
         "repositoryURL": "https://github.com/kiliankoe/CLISpinner.git",
         "state": {
@@ -33,8 +42,8 @@
         "repositoryURL": "https://github.com/mxcl/PromiseKit.git",
         "state": {
           "branch": null,
-          "revision": "019d21dbbf4b495c95d73d6490db73f647a494f4",
-          "version": "6.6.1"
+          "revision": "80d16f9471abcc55d77a6ac6db803429e88c502c",
+          "version": "6.7.0"
         }
       },
       {
@@ -48,7 +57,7 @@
       },
       {
         "package": "Toml",
-        "repositoryURL": "https://github.com/jdfergason/swift-toml",
+        "repositoryURL": "https://github.com/jdfergason/swift-toml.git",
         "state": {
           "branch": null,
           "revision": "f4a3d9fbd94a855d6f85989c7e4c29e0ad75999c",
@@ -57,7 +66,7 @@
       },
       {
         "package": "SwiftCLI",
-        "repositoryURL": "https://github.com/jakeheis/SwiftCLI",
+        "repositoryURL": "https://github.com/jakeheis/SwiftCLI.git",
         "state": {
           "branch": null,
           "revision": "fb076cba39c679da4e27813518d8860d8815a25b",
