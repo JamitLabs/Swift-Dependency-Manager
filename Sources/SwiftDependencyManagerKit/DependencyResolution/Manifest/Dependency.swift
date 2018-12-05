@@ -13,12 +13,11 @@ struct Dependency: Equatable, Codable {
     }
 
     func fetchManifest() -> Promise<Manifest> {
-        let gitRepo = GitRepository(path: gitPath)
-
         return firstly {
-            gitRepo.latestCompatibleCommit(forVersion: version)
-        }.then { commit in
-            gitRepo.fetchManifest(commit: commit)
+            return Guarantee.value(GitRepository(path: gitPath))
+        }.then { (gitRepo: GitRepository) -> Promise<Manifest> in
+            let commit = try gitRepo.latestCompatibleCommit(forVersion: self.version)
+            return gitRepo.fetchManifest(commit: commit)
         }
     }
 }

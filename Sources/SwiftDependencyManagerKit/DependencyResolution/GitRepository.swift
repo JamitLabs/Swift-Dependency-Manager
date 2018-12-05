@@ -4,41 +4,64 @@ import MungoHealer
 import PromiseKit
 import Clibgit2
 
-struct GitRepository {
-    let path: String
+class GitRepository {
+    private let path: String
+    private let localRepository: Git.Repository
 
-    func latestCompatibleCommit(forVersion versionSpecifier: VersionSpecifier) -> Promise<String> {
-        return Promise { seal in
-            switch versionSpecifier {
-            case .any:
-                let tags = fetchTags()
-                guard let latestVersion = tags.compactMap({ SemanticVersion(rawValue: $0) }).max() else {
-                    seal.reject(MungoError(source: .invalidUserInput, message: "Could not find any release tag."))
-                    return
-                }
+    init(path: String) {
+        let remoteUrl = URL(string: path)!
+        let randomDirName = String(randomWithLength: 8, allowedCharactersType: .alphaNumeric)
+        let tempDir = FileManager.default.temporaryDirectory.appendingPathComponent(randomDirName)
 
-                let latestVersionTag = tags.first { SemanticVersion(rawValue: $0) == latestVersion }!
-                print("TODO: return commit for tag \(latestVersionTag)")
+        self.path = path
+        self.localRepository = Git.shared.clone(from: remoteUrl, to: tempDir)
+    }
 
-            case let .exactVersion(version):
-                break
-                // TODO: return commit of git tag
-
-            case let .minimumVersion(version):
-                break
-                // TODO: return latest release in case bigger than min version
-
-            case let .upToNextMajor(version):
-                break
-                // TODO: return latest minor/patch release within given major version if existent and bigger than version
-
-            case let .branch(branch):
-                break
-                // TODO: return latest commit on branch
-
-            case let .commit(commit):
-                seal.fulfill(commit)
+    func latestCompatibleCommit(forVersion versionSpecifier: VersionSpecifier) throws -> String {
+        switch versionSpecifier {
+        case .any:
+            let tags = self.localRepository.tags()
+            guard let latestVersion = tags.compactMap({ SemanticVersion(rawValue: $0) }).max() else {
+                throw MungoError(source: .invalidUserInput, message: "Could not find any release tag.")
             }
+
+            let latestVersionTag = tags.first { SemanticVersion(rawValue: $0) == latestVersion }!
+            return localRepository.commitOID(forTag: latestVersionTag).sha()!
+
+        case let .exactVersion(version):
+            let tags = self.localRepository.tags()
+            print(version)
+            guard let matchingTag = tags.first(where: { SemanticVersion(rawValue: $0) == version }) else {
+                throw MungoError(source: .invalidUserInput, message: "Could not find any release tag matching version '\(version)'.")
+            }
+
+            return localRepository.commitOID(forTag: matchingTag).sha()!
+
+        case let .minimumVersion(version):
+            let tags = self.localRepository.tags()
+            guard let latestMatchingVersion = tags.compactMap({ SemanticVersion(rawValue: $0) }).filter({ $0 >= version }).max() else {
+                throw MungoError(source: .invalidUserInput, message: "Could not find any release tag matching minimum version '\(version)'.")
+            }
+
+            let latestVersionTag = tags.first { SemanticVersion(rawValue: $0) == latestMatchingVersion }!
+            return localRepository.commitOID(forTag: latestVersionTag).sha()!
+
+        case let .upToNextMajor(version):
+            let tags = self.localRepository.tags()
+            guard let latestMatchingVersion = tags.compactMap({ SemanticVersion(rawValue: $0) }).filter({ $0.major == version.major && $0 >= version }).max() else {
+                throw MungoError(source: .invalidUserInput, message: "Could not find any release tag matching up to next major version '\(version)'.")
+            }
+
+            let latestVersionTag = tags.first { SemanticVersion(rawValue: $0) == latestMatchingVersion }!
+            return localRepository.commitOID(forTag: latestVersionTag).sha()!
+
+        case let .branch(branch):
+            // TODO: return latest commit on branch
+            return ""
+
+        case let .commit(commit):
+            // TODO: check if commit actually exists
+            return commit
         }
     }
 
@@ -46,15 +69,5 @@ struct GitRepository {
         return Promise { seal in
             // TODO: not yet implemented
         }
-    }
-
-    func fetchTags() -> [String] {
-        let repoManager = RepositoryManager()
-        let remoteUrl = URL(string: path)!
-        let randomDirName = String(randomWithLength: 8, allowedCharactersType: .alphaNumeric)
-        let tempDir = FileManager.default.temporaryDirectory.appendingPathComponent(randomDirName)
-        let repo = try! Repository(cloneFrom: remoteUrl, at: tempDir, manager: repoManager)
-        let tags = Tags(repository: repo)
-        return tags.names()
     }
 }
