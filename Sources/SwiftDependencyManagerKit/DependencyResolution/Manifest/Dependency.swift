@@ -13,6 +13,8 @@ struct Dependency: Equatable, Codable {
     }
 
     func fetchManifest() -> Promise<Manifest> {
+        print("Fetching manifest of dependency '\(name)' ...", level: .info)
+
         return firstly {
             let branch: String? = {
                 guard case let VersionSpecifier.branch(branch) = version else { return nil }

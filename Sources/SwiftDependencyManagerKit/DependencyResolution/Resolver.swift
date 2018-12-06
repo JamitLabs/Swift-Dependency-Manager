@@ -10,7 +10,7 @@ class Resolver {
         return recursivelyResolve(manifest: manifest, product: product)
     }
 
-    func recursivelyResolve(manifest: Manifest, product: Product) -> Promise<[Dependency]> {
+    private func recursivelyResolve(manifest: Manifest, product: Product) -> Promise<[Dependency]> {
         return Promise { seal in
             let productDependencies = product.dependencies(in: manifest)
             self.resolvedDependencies = self.resolvedDependencies.combined(with: productDependencies)
