@@ -37,7 +37,7 @@ let package = Package(
         ),
         .testTarget(
             name: "SwiftDependencyManagerKitTests",
-            dependencies: ["SwiftDependencyManagerKit", "HandySwift"]
+            dependencies: ["SwiftDependencyManagerKit", "HandySwift", "PromiseKit"]
         )
     ]
 )

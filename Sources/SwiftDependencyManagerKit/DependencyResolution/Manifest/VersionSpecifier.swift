@@ -67,24 +67,11 @@ enum VersionSpecifier: RawRepresentable, Codable, Equatable {
             return nil
         }
     }
-}
 
-extension Collection where Element == VersionSpecifier {
-    var commonVersionSpecifier: VersionSpecifier? {
-        guard var temporaryResult: VersionSpecifier = first else { return nil }
+    func commonVersionSpecifier(with other: VersionSpecifier) -> VersionSpecifier? {
+        guard self != other else { return self }
 
-        for semanticVersion in self {
-            guard let commonVersionSpecifier = commonVersionSpecifier(lhs: temporaryResult, rhs: semanticVersion) else { return nil }
-            temporaryResult = commonVersionSpecifier
-        }
-
-        return temporaryResult
-    }
-
-    private func commonVersionSpecifier(lhs: VersionSpecifier, rhs: VersionSpecifier) -> VersionSpecifier? {
-        guard lhs != rhs else { return lhs }
-
-        switch (lhs, rhs) {
+        switch (self, other) {
         case let (.any, moreSpecificVersionSpecifier), let (moreSpecificVersionSpecifier, .any):
             return moreSpecificVersionSpecifier
 

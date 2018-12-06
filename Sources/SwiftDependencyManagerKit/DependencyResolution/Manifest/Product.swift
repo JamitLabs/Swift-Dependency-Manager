@@ -5,6 +5,12 @@ struct Product {
     let paths: [String]?
     let dependencies: [String]?
 
+    init(name: String, paths: [String]? = nil, dependencies: [String]? = nil) {
+        self.name = name
+        self.paths = paths
+        self.dependencies = dependencies
+    }
+
     func dependencies(in manifest: Manifest) -> [Dependency] {
         guard let dependencies = dependencies else {
             return manifest.dependencies

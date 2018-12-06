@@ -11,7 +11,14 @@ class GitRepository {
     init(path: String, branch: String?) {
         let remoteUrl = URL(string: path)!
         let randomDirName = String(randomWithLength: 8, allowedCharactersType: .alphaNumeric)
-        let tempDir = FileManager.default.temporaryDirectory.appendingPathComponent(randomDirName)
+        let tempDir: URL = {
+            if #available(OSX 10.12, *) {
+                return FileManager.default.temporaryDirectory.appendingPathComponent(randomDirName)
+            } else {
+                return URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(randomDirName)
+            }
+        }()
+
 
         self.path = path
         self.localRepository = Git.shared.clone(from: remoteUrl, to: tempDir, branch: branch)
@@ -65,7 +72,17 @@ class GitRepository {
 
     func fetchManifest(commit: String) throws -> Manifest {
         localRepository.checkout(commit: commit)
-        let manifestFileContents = try localRepository.contents(of: Manifest.fileName)
-        return try Manifest.make(fileContents: manifestFileContents)
+
+        if localRepository.fileExists(Manifest.fileName) {
+            let fileContents = try localRepository.contents(of: Manifest.fileName)
+            return try Manifest.make(fileContents: fileContents)
+        } else if localRepository.fileExists(Cartfile.fileName) {
+            let fileContents = try localRepository.contents(of: Cartfile.fileName)
+            let productName = localRepository.remoteUrl.lastPathComponent.replacingOccurrences(of: ".git", with: "")
+            return try Cartfile.makeManifest(fileContents: fileContents, productName: productName)
+        } else {
+            let productName = localRepository.remoteUrl.lastPathComponent.replacingOccurrences(of: ".git", with: "")
+            return Manifest(products: [Product(name: productName)], dependencies: [])
+        }
     }
 }

@@ -14,9 +14,9 @@ final class Git {
         /// libgit2 pointer to repository
         private let pointer: UnsafeMutablePointer<OpaquePointer?>
 
-        private let remoteUrl: URL
-        private let localUrl: URL
-        private let branch: String?
+        let remoteUrl: URL
+        let localUrl: URL
+        let branch: String?
 
         fileprivate init(remoteUrl: URL, localUrl: URL, branch: String?) {
             self.remoteUrl = remoteUrl
@@ -68,8 +68,14 @@ final class Git {
             git_repository_set_head(pointer.pointee, (commit as NSString).utf8String)
         }
 
+        func fileExists(_ relativeFilePath: String) -> Bool {
+            let fileUrl = localUrl.appendingPathComponent(relativeFilePath)
+            return FileManager.default.fileExists(atPath: fileUrl.path)
+        }
+
         func contents(of relativeFilePath: String) throws -> String {
-            return try String(contentsOf: localUrl.appendingPathComponent(relativeFilePath))
+            let fileUrl = localUrl.appendingPathComponent(relativeFilePath)
+            return try String(contentsOf: fileUrl)
         }
     }
 

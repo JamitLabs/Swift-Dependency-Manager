@@ -3,23 +3,24 @@ import MungoHealer
 import PromiseKit
 
 class Resolver {
-    let manifest: Manifest
-    let product: Product
+    var resolvedDependencies: [Dependency] = []
 
-    init(manifest: Manifest, product: Product) {
-        self.manifest = manifest
-        self.product = product
+    func resolveDependencies(manifest: Manifest, product: Product) -> Promise<[Dependency]> {
+        resolvedDependencies = []
+        return recursivelyResolve(manifest: manifest, product: product)
     }
 
-    func resolveDependencies() -> Promise<[Dependency]> {
+    func recursivelyResolve(manifest: Manifest, product: Product) -> Promise<[Dependency]> {
         return Promise { seal in
-            var dependencies: [Dependency] = product.dependencies(in: manifest)
+            let productDependencies = product.dependencies(in: manifest)
+            self.resolvedDependencies = self.resolvedDependencies.combined(with: productDependencies)
+
             var lane: Promise<Void> = Promise()
 
-            for dependency in dependencies {
+            for dependency in productDependencies {
                 lane = lane.then {
                     dependency.fetchManifest()
-                }.map { (manifest: Manifest) in
+                }.then { (manifest: Manifest) -> Promise<[Dependency]> in
                     guard let product = manifest.products.first(where: { $0.name == dependency.name }) else {
                         throw MungoError(
                             source: .invalidUserInput,
@@ -27,16 +28,37 @@ class Resolver {
                         )
                     }
 
-                    let subdependencies = product.dependencies(in: manifest)
-                    dependencies.append(contentsOf: subdependencies)
+                    return self.recursivelyResolve(manifest: manifest, product: product)
+                }.map { (subdependencies: [Dependency]) in
+                    self.resolvedDependencies = self.resolvedDependencies.combined(with: subdependencies)
                 }
             }
 
             lane.done {
-                seal.fulfill(dependencies)
+                seal.fulfill(self.resolvedDependencies)
             }.catch { error in
                 seal.reject(error)
             }
         }
+    }
+}
+
+extension Array where Element == Dependency {
+    func combined(with otherArray: [Dependency]) -> [Dependency] {
+        var combinedDict: [String: Dependency] = [:]
+
+        for dependency in (self + otherArray) {
+            if let existingDependency = combinedDict[dependency.name] {
+                if let commonVersion = existingDependency.version.commonVersionSpecifier(with: dependency.version) {
+                    combinedDict[dependency.name] = Dependency(name: dependency.name, gitPath: existingDependency.gitPath, version: commonVersion)
+                } else {
+                    // TODO: show error when versions are not compatible with each other
+                }
+            } else {
+                combinedDict[dependency.name] = dependency
+            }
+        }
+
+        return Array(combinedDict.values)
     }
 }
