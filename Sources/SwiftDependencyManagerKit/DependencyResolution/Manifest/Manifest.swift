@@ -4,7 +4,7 @@ import PromiseKit
 import Toml
 
 struct Manifest {
-    private static let fileName = "Dependencies.toml"
+    static let fileName = "Dependencies.toml"
 
     let products: [Product]
     let dependencies: [Dependency]

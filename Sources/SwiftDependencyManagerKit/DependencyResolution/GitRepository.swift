@@ -63,9 +63,9 @@ class GitRepository {
         }
     }
 
-    func fetchManifest(commit: String) -> Promise<Manifest> {
-        return Promise { seal in
-            // TODO: not yet implemented
-        }
+    func fetchManifest(commit: String) throws -> Manifest {
+        localRepository.checkout(commit: commit)
+        let manifestFileContents = try localRepository.contents(of: Manifest.fileName)
+        return try Manifest.make(fileContents: manifestFileContents)
     }
 }

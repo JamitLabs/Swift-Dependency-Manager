@@ -14,7 +14,15 @@ final class Git {
         /// libgit2 pointer to repository
         private let pointer: UnsafeMutablePointer<OpaquePointer?>
 
+        private let remoteUrl: URL
+        private let localUrl: URL
+        private let branch: String?
+
         fileprivate init(remoteUrl: URL, localUrl: URL, branch: String?) {
+            self.remoteUrl = remoteUrl
+            self.localUrl = localUrl
+            self.branch = branch
+
             let cloneOptions = UnsafeMutablePointer<git_clone_options>.allocate(capacity: 1)
             git_clone_init_options(cloneOptions, UInt32(GIT_CLONE_OPTIONS_VERSION))
 
@@ -54,6 +62,14 @@ final class Git {
 
             let commitGitOid = git_commit_id(commitPointer.pointee)
             return OID(withGitOid: commitGitOid!.pointee)
+        }
+
+        func checkout(commit: String) {
+            git_repository_set_head(pointer.pointee, (commit as NSString).utf8String)
+        }
+
+        func contents(of relativeFilePath: String) throws -> String {
+            return try String(contentsOf: localUrl.appendingPathComponent(relativeFilePath))
         }
     }
 

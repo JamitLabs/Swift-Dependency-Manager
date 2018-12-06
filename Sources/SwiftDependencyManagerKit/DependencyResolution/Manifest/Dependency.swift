@@ -22,7 +22,7 @@ struct Dependency: Equatable, Codable {
             return Guarantee.value(GitRepository(path: gitPath, branch: branch))
         }.then { (gitRepo: GitRepository) -> Promise<Manifest> in
             let commit = try gitRepo.latestCompatibleCommit(forVersion: self.version)
-            return gitRepo.fetchManifest(commit: commit)
+            return Promise.value(try gitRepo.fetchManifest(commit: commit))
         }
     }
 }
