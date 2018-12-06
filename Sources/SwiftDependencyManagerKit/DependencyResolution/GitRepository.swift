@@ -8,13 +8,13 @@ class GitRepository {
     private let path: String
     private let localRepository: Git.Repository
 
-    init(path: String) {
+    init(path: String, branch: String?) {
         let remoteUrl = URL(string: path)!
         let randomDirName = String(randomWithLength: 8, allowedCharactersType: .alphaNumeric)
         let tempDir = FileManager.default.temporaryDirectory.appendingPathComponent(randomDirName)
 
         self.path = path
-        self.localRepository = Git.shared.clone(from: remoteUrl, to: tempDir)
+        self.localRepository = Git.shared.clone(from: remoteUrl, to: tempDir, branch: branch)
     }
 
     func latestCompatibleCommit(forVersion versionSpecifier: VersionSpecifier) throws -> String {
@@ -56,12 +56,10 @@ class GitRepository {
             return localRepository.commitOID(forTag: latestVersionTag).sha()!
 
         case let .branch(branch):
-            // TODO: return latest commit on branch
-            return ""
+            return localRepository.commitOID(forBranch: branch).sha()!
 
         case let .commit(commit):
-            // TODO: check if commit actually exists
-            return commit
+            return try! OID(withSha: commit).sha()!
         }
     }
 

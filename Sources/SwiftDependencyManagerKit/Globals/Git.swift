@@ -14,9 +14,16 @@ final class Git {
         /// libgit2 pointer to repository
         private let pointer: UnsafeMutablePointer<OpaquePointer?>
 
-        fileprivate init(remoteUrl: URL, localUrl: URL) {
+        fileprivate init(remoteUrl: URL, localUrl: URL, branch: String?) {
+            let cloneOptions = UnsafeMutablePointer<git_clone_options>.allocate(capacity: 1)
+            git_clone_init_options(cloneOptions, UInt32(GIT_CLONE_OPTIONS_VERSION))
+
+            if let branch = branch {
+                cloneOptions.pointee.checkout_branch = (branch as NSString).utf8String
+            }
+
             self.pointer = UnsafeMutablePointer<OpaquePointer?>.allocate(capacity: 1)
-            git_clone(pointer, remoteUrl.absoluteString, localUrl.path, nil)
+            git_clone(pointer, remoteUrl.absoluteString, localUrl.path, cloneOptions)
         }
 
         func tags() -> [String] {
@@ -27,15 +34,31 @@ final class Git {
             return git_strarray_to_strings(&tags)
         }
 
+        func commitOID(forBranch branch: String) -> OID {
+            let branchPointer = UnsafeMutablePointer<OpaquePointer?>.allocate(capacity: 1)
+            git_branch_lookup(branchPointer, pointer.pointee, branch, git_convert_branch_type(BranchType.local))
+
+            let commitPointer = UnsafeMutablePointer<OpaquePointer?>.allocate(capacity: 1)
+            git_reference_peel(commitPointer, branchPointer.pointee, GIT_OBJ_COMMIT)
+
+            let commitGitOid = git_commit_id(commitPointer.pointee)
+            return OID(withGitOid: commitGitOid!.pointee)
+        }
+
         func commitOID(forTag tag: String) -> OID {
             let tagPointer = UnsafeMutablePointer<OpaquePointer?>.allocate(capacity: 1)
             git_reference_lookup(tagPointer, pointer.pointee, "refs/tags/\(tag)")
-            return OID(withGitOid: git_tag_target_id(tagPointer.pointee)!.pointee) // TODO: fix getting commit OID using tag name
+
+            let commitPointer = UnsafeMutablePointer<OpaquePointer?>.allocate(capacity: 1)
+            git_reference_peel(commitPointer, tagPointer.pointee, GIT_OBJ_COMMIT)
+
+            let commitGitOid = git_commit_id(commitPointer.pointee)
+            return OID(withGitOid: commitGitOid!.pointee)
         }
     }
 
     // MARK: - Git Tasks
-    func clone(from remoteUrl: URL, to localUrl: URL) -> Repository {
-        return Repository(remoteUrl: remoteUrl, localUrl: localUrl)
+    func clone(from remoteUrl: URL, to localUrl: URL, branch: String?) -> Repository {
+        return Repository(remoteUrl: remoteUrl, localUrl: localUrl, branch: branch)
     }
 }
