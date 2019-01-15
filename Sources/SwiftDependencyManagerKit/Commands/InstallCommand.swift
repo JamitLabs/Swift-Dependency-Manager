@@ -11,8 +11,8 @@ public class InstallCommand: Command {
 
     // MARK: - Instance Methods
     public func execute() throws {
-        try measure("Command") {
-            try SwiftPM.shared.resolveDependencies()
+        measure("Install Command") {
+            // TODO: not yet implemented
         }
     }
 }

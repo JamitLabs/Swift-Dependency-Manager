@@ -4,10 +4,18 @@ import CLISpinner
 import Foundation
 import Rainbow
 
+/// The print level type.
 enum PrintLevel {
+    /// Print (potentially) long data or less interesting information. Only printed if tool executed in vebose mode.
     case verbose
+
+    /// Print any kind of information potentially interesting to users.
     case info
+
+    /// Print information that might potentially be problematic.
     case warning
+
+    /// Print information that probably is problematic.
     case error
 
     var color: Color {
@@ -27,11 +35,22 @@ enum PrintLevel {
     }
 }
 
+/// The output format type.
 enum OutputFormatTarget {
+    /// Output is targeted to a console to be read by developers.
     case human
+
+    /// Output is targeted to Xcode. Native support for Xcode Warnings & Errors.
     case xcode
 }
 
+/// Prints a message to command line with proper formatting based on level, source & output target.
+///
+/// - Parameters:
+///   - message: The message to be printed. Don't include `Error!`, `Warning!` or similar information at the beginning.
+///   - level: The level of the print statement.
+///   - file: The file this print statement refers to. Used for showing errors/warnings within Xcode if run as script phase.
+///   - line: The line within the file this print statement refers to. Used for showing errors/warnings within Xcode if run as script phase.
 func print(_ message: String, level: PrintLevel, file: String? = nil, line: Int? = nil) {
     switch Constants.outputFormatTarget {
     case .human:
@@ -41,6 +60,34 @@ func print(_ message: String, level: PrintLevel, file: String? = nil, line: Int?
         xcodePrint(message, level: level, file: file, line: line)
     }
 }
+
+/// Prints a message and shows a spinner to communicate a longer running task processing at the moment.
+///
+/// - Parameters:
+///   - message: The message to be printed. Don't include `Error!`, `Warning!` or similar information at the beginning.
+///   - level: The level of the print statement.
+///   - pattern: The pattern to be shown for the spinner. Defaults to `.dots`.
+///   - task: Task closure to execute with spinner. Must provide a completion closure to be called when execution completed.
+func performWithSpinner(
+    _ message: String,
+    level: PrintLevel = .info,
+    pattern: CLISpinner.Pattern = .dots,
+    task: @escaping (@escaping (() -> Void) -> Void) -> Void
+) {
+    let spinner = Spinner(pattern: pattern, text: message, color: level.color)
+    spinner.start()
+    spinner.unhideCursor()
+
+    dispatchGroup.enter()
+    task { completion in
+        spinner.stopAndClear()
+        completion()
+        dispatchGroup.leave()
+    }
+
+    dispatchGroup.wait()
+}
+
 
 private func humanPrint(_ message: String, level: PrintLevel, file: String? = nil, line: Int? = nil) {
     let location = locationInfo(file: file, line: line)
@@ -113,23 +160,3 @@ private func locationInfo(file: String?, line: Int?) -> String? {
 }
 
 private let dispatchGroup = DispatchGroup()
-
-func performWithSpinner(
-    _ message: String,
-    level: PrintLevel = .info,
-    pattern: CLISpinner.Pattern = .dots,
-    _ body: @escaping (@escaping (() -> Void) -> Void) -> Void
-) {
-    let spinner = Spinner(pattern: pattern, text: message, color: level.color)
-    spinner.start()
-    spinner.unhideCursor()
-
-    dispatchGroup.enter()
-    body { completion in
-        spinner.stopAndClear()
-        completion()
-        dispatchGroup.leave()
-    }
-
-    dispatchGroup.wait()
-}

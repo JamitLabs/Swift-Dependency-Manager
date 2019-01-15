@@ -1,13 +1,14 @@
 import Foundation
 import HandySwift
+import Utility
 
 enum VersionSpecifier: RawRepresentable, Codable, Equatable {
     case any
     case commit(String) // TODO: clearly document that framework releases should never include a commit based dependency version specifier
     case branch(String) // TODO: clearly document that framework releases should never include a branch based dependency version specifier
-    case exactVersion(SemanticVersion) // TODO: document that .upToNextMajor should be used instead of this whenever possible
-    case minimumVersion(SemanticVersion)
-    case upToNextMajor(SemanticVersion)
+    case exactVersion(Version) // TODO: document that .upToNextMajor should be used instead of this whenever possible
+    case minimumVersion(Version)
+    case upToNextMajor(Version)
 
     typealias RawValue = String
 
@@ -23,13 +24,13 @@ enum VersionSpecifier: RawRepresentable, Codable, Equatable {
             return "branch:\(branchName)"
 
         case let .exactVersion(version):
-            return "exactVersion:\(version.rawValue)"
+            return "exactVersion:\(version)"
 
         case let .minimumVersion(version):
-            return "minimumVersion:\(version.rawValue)"
+            return "minimumVersion:\(version)"
 
         case let .upToNextMajor(version):
-            return "upToNextMajor:\(version.rawValue)"
+            return "upToNextMajor:\(version)"
         }
     }
 
@@ -39,7 +40,7 @@ enum VersionSpecifier: RawRepresentable, Codable, Equatable {
 
     init?(rawValue: VersionSpecifier.RawValue) {
         let getRawValueString: () -> String = { rawValue.components(separatedBy: ":")[1] }
-        let getRawValueVersion: () -> SemanticVersion? = { SemanticVersion(rawValue: getRawValueString()) }
+        let getRawValueVersion: () -> Version? = { Version(string: getRawValueString()) }
 
         switch rawValue {
         case "any":
@@ -102,11 +103,5 @@ enum VersionSpecifier: RawRepresentable, Codable, Equatable {
         default:
             return nil
         }
-    }
-}
-
-extension SemanticVersion: ExpressibleByStringLiteral {
-    init(stringLiteral value: String) {
-        self = SemanticVersion(rawValue: value)!
     }
 }

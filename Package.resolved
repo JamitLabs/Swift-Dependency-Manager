@@ -2,6 +2,15 @@
   "object": {
     "pins": [
       {
+        "package": "CLISpinner",
+        "repositoryURL": "https://github.com/kiliankoe/CLISpinner.git",
+        "state": {
+          "branch": null,
+          "revision": "93ca0c508e2bfcfc65ef068f667b3f20c327158c",
+          "version": "0.3.6"
+        }
+      },
+      {
         "package": "HandySwift",
         "repositoryURL": "https://github.com/Flinesoft/HandySwift.git",
         "state": {
@@ -15,8 +24,26 @@
         "repositoryURL": "https://github.com/JamitLabs/MungoHealer.git",
         "state": {
           "branch": null,
-          "revision": "3c60891b8191c9068994a485152a85300ab92ff9",
-          "version": "0.3.1"
+          "revision": "132e5e454298958f60ca6f1f34c733bc41f299e0",
+          "version": "0.3.2"
+        }
+      },
+      {
+        "package": "Rainbow",
+        "repositoryURL": "https://github.com/onevcat/Rainbow.git",
+        "state": {
+          "branch": null,
+          "revision": "797a68d0a642609424b08f11eb56974a54d5f6e2",
+          "version": "3.1.4"
+        }
+      },
+      {
+        "package": "SwiftPM",
+        "repositoryURL": "https://github.com/apple/swift-package-manager.git",
+        "state": {
+          "branch": "swift-4.2-branch",
+          "revision": "235aacc514cb81a6881364b0fedcb3dd083228f3",
+          "version": null
         }
       },
       {

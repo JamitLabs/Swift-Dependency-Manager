@@ -1,34 +1,17 @@
 import Foundation
 import MungoHealer
-import PromiseKit
 import Toml
 
 struct Manifest {
-    static let fileName = "Dependencies.toml"
-
     let products: [Product]
     let dependencies: [Dependency]
 
-    static func load() -> Promise<Manifest> {
-        return Promise { seal in
-            let manifestUrl = URL(fileURLWithPath: FileManager.default.currentDirectoryPath).appendingPathComponent(Manifest.fileName)
-
-            guard FileManager.default.fileExists(atPath: manifestUrl.path) else {
-                seal.reject(MungoError(source: .internalInconsistency, message: "Could not find manifest file at path '\(manifestUrl.path)'."))
-                return
-            }
-
-            do {
-                let fileContents = try String(contentsOf: manifestUrl)
-                let manifest = try self.make(fileContents: fileContents)
-                seal.fulfill(manifest)
-            } catch {
-                seal.reject(error)
-            }
-        }
+    init(products: [Product], dependencies: [Dependency]) {
+        self.products = products
+        self.dependencies = dependencies
     }
 
-    static func make(fileContents: String) throws -> Manifest {
+    init(fileContents: String) throws {
         guard let manifestToml = try? Toml(withString: fileContents) else {
             throw MungoError(source: .invalidUserInput, message: "Could not parse TOML file contents.")
         }
@@ -67,10 +50,11 @@ struct Manifest {
             dependencies.append(Dependency(name: name, gitPath: gitPath, version: version))
         }
 
-        return Manifest(products: products, dependencies: dependencies)
+        self.products = products
+        self.dependencies = dependencies
     }
 
-    func fileContents() -> String {
+    func toFileContents() -> String {
         let productsContents: [String] = products.map { product in
             var lines: [String] = ["[[products]]"]
             lines.append("name = \"\(product.name)\"")

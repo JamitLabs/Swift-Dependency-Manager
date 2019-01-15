@@ -11,6 +11,8 @@ public class CleanCommand: Command {
 
     // MARK: - Instance Methods
     public func execute() throws {
-        print("Command '\(name)' is not yet implemented.", level: .info)
+        measure("Clean Command") {
+            // TODO: not yet implemented
+        }
     }
 }

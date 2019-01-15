@@ -11,6 +11,7 @@ struct Product {
         self.dependencies = dependencies
     }
 
+    /// Returns the dependencies specified for the product. Returns all dependencies in Manifest if dependencies are nil.
     func dependencies(in manifest: Manifest) -> [Dependency] {
         guard let dependencies = dependencies else {
             return manifest.dependencies

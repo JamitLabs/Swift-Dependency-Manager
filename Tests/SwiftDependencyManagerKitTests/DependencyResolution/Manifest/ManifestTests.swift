@@ -2,7 +2,7 @@
 import XCTest
 
 class ManifestTests: XCTestCase {
-    func testMakeAppManifest() {
+    func testInitWithFileContents() {
         let manifestContents: String = """
             [[dependencies]]
             name = "HandySwift"
@@ -12,23 +12,23 @@ class ManifestTests: XCTestCase {
             [[dependencies]]
             name = "HandyUIKit"
             gitPath = "https://github.com/Flinesoft/HandyUIKit.git"
-            version = "upToNextMajor:1.8"
+            version = "upToNextMajor:1.8.0"
             """
-        let manifest = try! Manifest.make(fileContents: manifestContents)
+        if let manifest = mungo.make({ try Manifest(fileContents: manifestContents) }) {
+            XCTAssertEqual(manifest.products.count, 0)
+            XCTAssertEqual(manifest.dependencies.count, 2)
 
-        XCTAssertEqual(manifest.products.count, 0)
-        XCTAssertEqual(manifest.dependencies.count, 2)
+            XCTAssertEqual(manifest.dependencies[0].name, "HandySwift")
+            XCTAssertEqual(manifest.dependencies[0].gitPath, "https://github.com/Flinesoft/HandySwift.git")
+            XCTAssertEqual(manifest.dependencies[0].version, .any)
 
-        XCTAssertEqual(manifest.dependencies[0].name, "HandySwift")
-        XCTAssertEqual(manifest.dependencies[0].gitPath, "https://github.com/Flinesoft/HandySwift.git")
-        XCTAssertEqual(manifest.dependencies[0].version, .any)
-
-        XCTAssertEqual(manifest.dependencies[1].name, "HandyUIKit")
-        XCTAssertEqual(manifest.dependencies[1].gitPath, "https://github.com/Flinesoft/HandyUIKit.git")
-        XCTAssertEqual(manifest.dependencies[1].version, .upToNextMajor("1.8.0"))
+            XCTAssertEqual(manifest.dependencies[1].name, "HandyUIKit")
+            XCTAssertEqual(manifest.dependencies[1].gitPath, "https://github.com/Flinesoft/HandyUIKit.git")
+            XCTAssertEqual(manifest.dependencies[1].version, .upToNextMajor("1.8.0"))
+        }
     }
 
-    func testMakeSimpleFrameworkManifest() {
+    func testInitSimpleFrameworkManifest() {
         let manifestContents: String = """
             [[products]]
             name = "CSVImporter"
@@ -43,22 +43,22 @@ class ManifestTests: XCTestCase {
             gitPath = "https://github.com/Flinesoft/HandyUIKit.git"
             version = "minimumVersion:1.4.4"
             """
-        let manifest = try! Manifest.make(fileContents: manifestContents)
+        if let manifest = mungo.make({ try Manifest(fileContents: manifestContents) }) {
+            XCTAssertEqual(manifest.products.count, 1)
+            XCTAssertEqual(manifest.dependencies.count, 2)
 
-        XCTAssertEqual(manifest.products.count, 1)
-        XCTAssertEqual(manifest.dependencies.count, 2)
+            XCTAssertEqual(manifest.products[0].name, "CSVImporter")
+            XCTAssertEqual(manifest.products[0].paths, nil)
+            XCTAssertEqual(manifest.products[0].dependencies, nil)
 
-        XCTAssertEqual(manifest.products[0].name, "CSVImporter")
-        XCTAssertEqual(manifest.products[0].paths, nil)
-        XCTAssertEqual(manifest.products[0].dependencies, nil)
+            XCTAssertEqual(manifest.dependencies[0].name, "HandySwift")
+            XCTAssertEqual(manifest.dependencies[0].gitPath, "https://github.com/Flinesoft/HandySwift.git")
+            XCTAssertEqual(manifest.dependencies[0].version, .commit("0000000000000000000000000000000000000000"))
 
-        XCTAssertEqual(manifest.dependencies[0].name, "HandySwift")
-        XCTAssertEqual(manifest.dependencies[0].gitPath, "https://github.com/Flinesoft/HandySwift.git")
-        XCTAssertEqual(manifest.dependencies[0].version, .commit("0000000000000000000000000000000000000000"))
-
-        XCTAssertEqual(manifest.dependencies[1].name, "HandyUIKit")
-        XCTAssertEqual(manifest.dependencies[1].gitPath, "https://github.com/Flinesoft/HandyUIKit.git")
-        XCTAssertEqual(manifest.dependencies[1].version, .minimumVersion("1.4.4"))
+            XCTAssertEqual(manifest.dependencies[1].name, "HandyUIKit")
+            XCTAssertEqual(manifest.dependencies[1].gitPath, "https://github.com/Flinesoft/HandyUIKit.git")
+            XCTAssertEqual(manifest.dependencies[1].version, .minimumVersion("1.4.4"))
+        }
     }
 
 
@@ -84,26 +84,26 @@ class ManifestTests: XCTestCase {
             gitPath = "https://github.com/Flinesoft/HandyUIKit.git"
             version = "exactVersion:1.9.1"
             """
-        let manifest = try! Manifest.make(fileContents: manifestContents)
+        if let manifest = mungo.make({ try Manifest(fileContents: manifestContents) }) {
+            XCTAssertEqual(manifest.products.count, 2)
+            XCTAssertEqual(manifest.dependencies.count, 2)
 
-        XCTAssertEqual(manifest.products.count, 2)
-        XCTAssertEqual(manifest.dependencies.count, 2)
+            XCTAssertEqual(manifest.products[0].name, "CSVImporter")
+            XCTAssertEqual(manifest.products[0].paths, ["Sources/CSVImporter"])
+            XCTAssertEqual(manifest.products[0].dependencies, ["CSVImporterKit"])
 
-        XCTAssertEqual(manifest.products[0].name, "CSVImporter")
-        XCTAssertEqual(manifest.products[0].paths, ["Sources/CSVImporter"])
-        XCTAssertEqual(manifest.products[0].dependencies, ["CSVImporterKit"])
+            XCTAssertEqual(manifest.products[1].name, "CSVImporterKit")
+            XCTAssertEqual(manifest.products[1].paths, ["Sources/CSVImporterKit"])
+            XCTAssertEqual(manifest.products[1].dependencies, ["HandySwift", "HandyUIKit"])
 
-        XCTAssertEqual(manifest.products[1].name, "CSVImporterKit")
-        XCTAssertEqual(manifest.products[1].paths, ["Sources/CSVImporterKit"])
-        XCTAssertEqual(manifest.products[1].dependencies, ["HandySwift", "HandyUIKit"])
+            XCTAssertEqual(manifest.dependencies[0].name, "HandySwift")
+            XCTAssertEqual(manifest.dependencies[0].gitPath, "https://github.com/Flinesoft/HandySwift.git")
+            XCTAssertEqual(manifest.dependencies[0].version, .branch("master"))
 
-        XCTAssertEqual(manifest.dependencies[0].name, "HandySwift")
-        XCTAssertEqual(manifest.dependencies[0].gitPath, "https://github.com/Flinesoft/HandySwift.git")
-        XCTAssertEqual(manifest.dependencies[0].version, .branch("master"))
-
-        XCTAssertEqual(manifest.dependencies[1].name, "HandyUIKit")
-        XCTAssertEqual(manifest.dependencies[1].gitPath, "https://github.com/Flinesoft/HandyUIKit.git")
-        XCTAssertEqual(manifest.dependencies[1].version, .exactVersion("1.9.1"))
+            XCTAssertEqual(manifest.dependencies[1].name, "HandyUIKit")
+            XCTAssertEqual(manifest.dependencies[1].gitPath, "https://github.com/Flinesoft/HandyUIKit.git")
+            XCTAssertEqual(manifest.dependencies[1].version, .exactVersion("1.9.1"))
+        }
     }
 
     func testFileContentsAppManifest() {
@@ -118,8 +118,9 @@ class ManifestTests: XCTestCase {
             gitPath = "https://github.com/Flinesoft/HandyUIKit.git"
             version = "upToNextMajor:1.8.0"
             """
-        let manifest = try! Manifest.make(fileContents: manifestContents)
-        XCTAssertEqual(manifest.fileContents(), manifestContents)
+        if let manifest = mungo.make({ try Manifest(fileContents: manifestContents) }) {
+            XCTAssertEqual(manifest.toFileContents(), manifestContents)
+        }
     }
 
     func testFileContentsSimpleFrameworkManifest() {
@@ -137,8 +138,9 @@ class ManifestTests: XCTestCase {
             gitPath = "https://github.com/Flinesoft/HandyUIKit.git"
             version = "minimumVersion:1.4.4"
             """
-        let manifest = try! Manifest.make(fileContents: manifestContents)
-        XCTAssertEqual(manifest.fileContents(), manifestContents)
+        if let manifest = mungo.make({ try Manifest(fileContents: manifestContents) }) {
+            XCTAssertEqual(manifest.toFileContents(), manifestContents)
+        }
     }
 
 
@@ -164,7 +166,8 @@ class ManifestTests: XCTestCase {
             gitPath = "https://github.com/Flinesoft/HandyUIKit.git"
             version = "exactVersion:1.9.1"
             """
-        let manifest = try! Manifest.make(fileContents: manifestContents)
-        XCTAssertEqual(manifest.fileContents(), manifestContents)
+        if let manifest = mungo.make({ try Manifest(fileContents: manifestContents) }) {
+            XCTAssertEqual(manifest.toFileContents(), manifestContents)
+        }
     }
 }

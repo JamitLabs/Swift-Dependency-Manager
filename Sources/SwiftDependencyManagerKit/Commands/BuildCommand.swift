@@ -11,6 +11,8 @@ public class BuildCommand: Command {
 
     // MARK: - Instance Methods
     public func execute() throws {
-        print("Command '\(name)' is not yet implemented.", level: .info)
+        measure("Build Command") {
+            // TODO: not yet implemented
+        }
     }
 }

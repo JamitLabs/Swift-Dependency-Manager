@@ -11,8 +11,8 @@ public class UpdateCommand: Command {
 
     // MARK: - Instance Methods
     public func execute() throws {
-        try measure("Command") {
-            try SwiftPM.shared.updateDependencies()
+        measure("Update Command") {
+            // TODO: not yet implemented
         }
     }
 }

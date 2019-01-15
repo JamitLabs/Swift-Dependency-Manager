@@ -11,8 +11,8 @@ public class InitCommand: Command {
 
     // MARK: - Instance Methods
     public func execute() throws {
-        measure("Command") {
-            ManifestCreator.shared.createInitialManifest()
+        measure("Init Command") {
+            // TODO: not yet implemented
         }
     }
 }
