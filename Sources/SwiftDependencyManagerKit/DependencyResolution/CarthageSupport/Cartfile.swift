@@ -1,6 +1,6 @@
 import Foundation
 import HandySwift
-import Utility
+import struct Utility.Version
 
 enum CartfileError: Error {
     case unsupportedVersionSpecifier(String)
