@@ -1,8 +1,9 @@
 import Foundation
 import MungoHealer
+import PackageLoading
 
-enum ManifestLoader {
-    static func load() throws -> Manifest {
+final class ManifestLoader: ManifestLoaderProtocol {
+    static func load() throws -> Manifest { // TODO: not yet implemented
         let manifestUrl = URL(fileURLWithPath: FileManager.default.currentDirectoryPath).appendingPathComponent("Dependencies.toml")
 
         guard FileManager.default.fileExists(atPath: manifestUrl.path) else {
