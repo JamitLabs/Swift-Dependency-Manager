@@ -1,5 +1,4 @@
 import Foundation
-import PromiseKit
 
 struct Dependency: Equatable, Codable {
     public let name: String
@@ -12,19 +11,8 @@ struct Dependency: Equatable, Codable {
         self.version = version
     }
 
-    func fetchManifest() -> Promise<Manifest> {
-        print("Fetching manifest of dependency '\(name)' ...", level: .info)
-
-        return firstly {
-            let branch: String? = {
-                guard case let VersionSpecifier.branch(branch) = version else { return nil }
-                return branch
-            }()
-
-            return Guarantee.value(GitRepository(path: gitPath, branch: branch))
-        }.then { (gitRepo: GitRepository) -> Promise<Manifest> in
-            let commit = try gitRepo.latestCompatibleCommit(forVersion: self.version)
-            return Promise.value(try gitRepo.fetchManifest(commit: commit))
-        }
+    func fetchManifest() throws -> Manifest {
+        // TODO: not yet implemented
+        fatalError("not yet implemented")
     }
 }
